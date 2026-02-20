@@ -33,20 +33,25 @@ with col2:
 predict_button = st.button("🚀 Predict Profitability", use_container_width=True)
 
 if predict_button:
+    input_data = pd.DataFrame({
+        "Sales": [sales],
+        "Discount": [discount],
+        "Category": [category],
+        "Sub-Category": [sub_category]
+    })
+
     prediction = model.predict(input_data)
+    probability = model.predict_proba(input_data)
+
+    profit_prob = probability[0][1] * 100
 
     if prediction[0] == 1:
         st.success("✅ This Order is Profitable!")
     else:
         st.error("⚠️ This Order is Likely Loss-Making!")
 
-if predict_button:
-    prediction = model.predict(input_data)
-    probability = model.predict_proba(input_data)
-
-    profit_prob = probability[0][1] * 100
-
     st.metric("Profit Probability", f"{profit_prob:.2f}%")
+
 
 st.sidebar.header("📌 About Project")
 st.sidebar.write("""
